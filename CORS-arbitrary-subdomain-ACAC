@@ -1,0 +1,31 @@
+id: CORS-arbitrary-subdomain-ACAC
+
+info: null
+  name: CORS Misconfiguration allowing for arbitrary subdomain to use ACAC
+  author: kernel_krunch
+  description: Checks for aribtrary subdomain accessible via CORS
+  severity: low
+  tags: cors
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    redirects: true
+    #max-redirects: 3
+
+# headers contain the headers for the request
+headers:
+  # Custom user-agent header
+  User-Agent: Some-Random-User-Agent
+  # Custom request origin
+  Origin: https://farhengoober432.{{Hostname}}
+
+matchers:
+  - type: word
+    condition: and
+    part: header
+    words:
+      - "Access-Control-Allow-Origin:"
+      - "Access-Control-Allow-Credentials: true"
+      - "https://farhengoober432"
